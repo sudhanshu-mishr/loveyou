@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Matches · ConnectPU{% endblock %}
+
+{% block content %}
+<h1 class="h4 text-dark mb-3">Your matches</h1>
+{% if matches %}
+  <div class="row g-3">
+    {% for user in matches %}
+      <div class="col-6 col-md-4 col-lg-3">
+        <a href="{{ url_for('chat', user_id=user.id) }}" class="match-card d-block text-decoration-none">
+          <div class="match-avatar" style="background-image:url('{{ (user.avatar_filename and url_for('static', filename='uploads/' ~ user.avatar_filename)) or url_for('static', filename='img/avatar_placeholder.svg') }}');"></div>
+          <div class="p-2">
+            <div class="fw-semibold text-dark small">{{ user.display_name }}</div>
+            <div class="text-muted extra-small">Tap to chat</div>
+          </div>
+        </a>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="glass-card p-4 text-center">
+    <p class="mb-1">No matches yet.</p>
+    <p class="text-muted mb-3">Keep swiping – your vibe tribe is out there.</p>
+    <a href="{{ url_for('discover') }}" class="btn btn-primary btn-sm">Start swiping</a>
+  </div>
+{% endif %}
+{% endblock %}

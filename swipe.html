@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}Discover · ConnectPU{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mb-3">
+  <div class="col-md-8 col-lg-6">
+    <form method="GET" class="glass-card p-3 mb-2">
+      <div class="d-flex flex-wrap gap-2 align-items-end">
+        <div class="flex-fill">
+          <label class="form-label small mb-1">Gender</label>
+          <input type="text" name="gender" value="{{ gender_filter or '' }}" class="form-control form-control-sm" placeholder="e.g. Male, Female">
+        </div>
+        <div style="width:90px;">
+          <label class="form-label small mb-1">Min age</label>
+          <input type="number" name="min_age" value="{{ min_age or '' }}" class="form-control form-control-sm" min="18" max="120">
+        </div>
+        <div style="width:90px;">
+          <label class="form-label small mb-1">Max age</label>
+          <input type="number" name="max_age" value="{{ max_age or '' }}" class="form-control form-control-sm" min="18" max="120">
+        </div>
+        <div class="flex-fill">
+          <label class="form-label small mb-1">Location contains</label>
+          <input type="text" name="location" value="{{ location_filter or '' }}" class="form-control form-control-sm" placeholder="City or area">
+        </div>
+        <div>
+          <button class="btn btn-primary btn-sm px-3" type="submit">Apply</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="row justify-content-center">
+  <div class="col-md-8 col-lg-6">
+    {% if candidate %}
+      <div class="card swipe-card">
+        <div class="card-img-top swipe-photo" style="background-image:url('{{ (candidate.avatar_filename and url_for('static', filename='uploads/' ~ candidate.avatar_filename)) or url_for('static', filename='img/avatar_placeholder.svg') }}');"></div>
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h2 class="h5 mb-0">{{ candidate.display_name }}{% if candidate.age %}, {{ candidate.age }}{% endif %}</h2>
+            <span class="badge bg-gradient-pill">{{ candidate.location or 'Nearby' }}</span>
+          </div>
+          <p class="text-muted small">{{ candidate.bio or "This user hasn't written a bio yet." }}</p>
+          {% if candidate.interests %}
+            <div class="interest-tags mb-3">
+              {% for tag in candidate.interests.split(',') %}
+                <span class="badge rounded-pill bg-tag">{{ tag.strip() }}</span>
+              {% endfor %}
+            </div>
+          {% endif %}
+          <div class="d-flex justify-content-around mt-3 swipe-actions">
+            <form method="POST" action="{{ url_for('pass_user', user_id=candidate.id) }}">
+              <button class="btn-circle-lg btn-pass" type="submit" title="Pass">✕</button>
+            </form>
+            <form method="POST" action="{{ url_for('like', user_id=candidate.id) }}">
+              <button class="btn-circle-lg btn-like" type="submit" title="Like">❤</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    {% else %}
+      <div class="glass-card text-center p-4">
+        <h2 class="h5 mb-2">You've seen everyone!</h2>
+        <p class="text-muted mb-3">Check back later as new people join ConnectPU.</p>
+        <a href="{{ url_for('profile') }}" class="btn btn-outline-secondary btn-sm">Improve your profile</a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
