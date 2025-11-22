@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block title %}Your profile · ConnectPU{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-7">
+    <div class="glass-card shadow-sm">
+      <div class="card-body p-4">
+        <div class="d-flex align-items-center mb-3">
+          <div class="avatar-lg me-3" style="background-image:url('{{ (current_user.avatar_filename and url_for('static', filename='uploads/' ~ current_user.avatar_filename)) or url_for('static', filename='img/avatar_placeholder.svg') }}');"></div>
+          <div>
+            <h2 class="h5 mb-0">{{ current_user.display_name }}</h2>
+            <p class="text-muted mb-0 small">Edit how others see you.</p>
+          </div>
+        </div>
+        <form method="POST" enctype="multipart/form-data">
+          {{ form.hidden_tag() }}
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              {{ form.name.label(class="form-label") }}
+              {{ form.name(class="form-control") }}
+              {% for error in form.name.errors %}
+                <div class="form-text text-danger">{{ error }}</div>
+              {% endfor %}
+            </div>
+            <div class="col-md-3 mb-3">
+              {{ form.age.label(class="form-label") }}
+              {{ form.age(class="form-control") }}
+              {% for error in form.age.errors %}
+                <div class="form-text text-danger">{{ error }}</div>
+              {% endfor %}
+            </div>
+            <div class="col-md-3 mb-3">
+              {{ form.gender.label(class="form-label") }}
+              {{ form.gender(class="form-control") }}
+              {% for error in form.gender.errors %}
+                <div class="form-text text-danger">{{ error }}</div>
+              {% endfor %}
+            </div>
+          </div>
+          <div class="mb-3">
+            {{ form.location.label(class="form-label") }}
+            {{ form.location(class="form-control") }}
+            {% for error in form.location.errors %}
+              <div class="form-text text-danger">{{ error }}</div>
+            {% endfor %}
+          </div>
+          <div class="mb-3">
+            {{ form.bio.label(class="form-label") }}
+            {{ form.bio(class="form-control", rows="3") }}
+            {% for error in form.bio.errors %}
+              <div class="form-text text-danger">{{ error }}</div>
+            {% endfor %}
+          </div>
+          <div class="mb-3">
+            {{ form.interests.label(class="form-label") }}
+            {{ form.interests(class="form-control") }}
+            <div class="form-text text-muted">Example: music, coding, travel, football</div>
+            {% for error in form.interests.errors %}
+              <div class="form-text text-danger">{{ error }}</div>
+            {% endfor %}
+          </div>
+          <div class="mb-3">
+            {{ form.avatar_file.label(class="form-label") }}
+            {{ form.avatar_file(class="form-control") }}
+            <div class="form-text text-muted">Upload a clear face photo (JPG/PNG/GIF).</div>
+            {% for error in form.avatar_file.errors %}
+              <div class="form-text text-danger">{{ error }}</div>
+            {% endfor %}
+          </div>
+          <div class="d-grid">
+            {{ form.submit(class="btn btn-primary btn-lg") }}
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
